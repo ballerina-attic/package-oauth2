@@ -2,6 +2,10 @@ package org.wso2.ballerina.connectors.oauth2;
 
 import ballerina.net.http;
 
+string accessTokenValue;
+http:HttpConnectorError e;
+http:Response response = {};
+
 @Description { value:"OAuth2 client connector"}
 @Param { value:"baseUrl: The endpoint base url"}
 @Param { value:"accessToken: The access token of the account"}
@@ -16,24 +20,18 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
         create http:HttpClient(baseUrl, {});
     }
 
-    string accessTokenValue;
-    http:HttpConnectorError e;
-
     @Description { value:"Get with OAuth2 authentication"}
     @Param { value:"path: The endpoint path"}
     @Param { value:"request: The request of the method"}
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action get (string path, http:Request request) (http:Response, http:HttpConnectorError) {
-        http:Response response = {};
-
-        accessTokenValue = constructAuthHeader (request, accessTokenValue, accessToken);
+        populateAuthHeader(request, accessToken);
         response, e = httpConnectorEP.get (path, request);
+        request = {};
 
-        if ((response.getStatusCode() == 401) && (refreshToken != "" || refreshToken != "null")) {
-            request = {};
-            accessTokenValue = getAccessTokenFromRefreshToken(request, accessToken, clientId, clientSecret, refreshToken,
-                                                              refreshTokenEP, refreshTokenPath);
+        if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
+                                 refreshTokenPath)) {
             response, e = httpConnectorEP.get (path, request);
         }
 
@@ -46,18 +44,16 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action post (string path, http:Request originalRequest) (http:Response, http:HttpConnectorError) {
-        http:Response response = {};
         json originalPayload = originalRequest.getJsonPayload();
 
-        accessTokenValue = constructAuthHeader (originalRequest, accessTokenValue, accessToken);
+        populateAuthHeader(originalRequest, accessToken);
         response, e = httpConnectorEP.post (path, originalRequest);
 
         http:Request request = {};
         request.setJsonPayload(originalPayload);
 
-        if ((response.getStatusCode() == 401) && (refreshToken != "" || refreshToken != "null")) {
-            accessTokenValue = getAccessTokenFromRefreshToken(request, accessToken, clientId, clientSecret, refreshToken,
-                                                              refreshTokenEP, refreshTokenPath);
+        if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
+                                 refreshTokenPath)) {
             response, e = httpConnectorEP.post (path, request);
         }
 
@@ -70,18 +66,16 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action put (string path, http:Request originalRequest) (http:Response, http:HttpConnectorError) {
-        http:Response response = {};
         json originalPayload = originalRequest.getJsonPayload();
 
-        accessTokenValue = constructAuthHeader (originalRequest, accessTokenValue, accessToken);
+        populateAuthHeader(originalRequest, accessToken);
         response, e = httpConnectorEP.put (path, originalRequest);
 
         http:Request request = {};
         request.setJsonPayload(originalPayload);
 
-        if ((response.getStatusCode() == 401) && (refreshToken != "" || refreshToken != "null")) {
-            accessTokenValue = getAccessTokenFromRefreshToken(request, accessToken, clientId, clientSecret, refreshToken,
-                                                              refreshTokenEP, refreshTokenPath);
+        if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
+                                 refreshTokenPath)) {
             response, e = httpConnectorEP.put (path, request);
         }
 
@@ -94,18 +88,16 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action delete (string path, http:Request originalRequest) (http:Response, http:HttpConnectorError) {
-        http:Response response = {};
         json originalPayload = originalRequest.getJsonPayload();
 
-        accessTokenValue = constructAuthHeader (originalRequest, accessTokenValue, accessToken);
+        populateAuthHeader(originalRequest, accessToken);
         response, e = httpConnectorEP.delete (path, originalRequest);
 
         http:Request request = {};
         request.setJsonPayload(originalPayload);
 
-        if ((response.getStatusCode() == 401) && (refreshToken != "" || refreshToken != "null")) {
-            accessTokenValue = getAccessTokenFromRefreshToken(request, accessToken, clientId, clientSecret, refreshToken,
-                                                              refreshTokenEP, refreshTokenPath);
+        if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
+                                 refreshTokenPath)) {
             response, e = httpConnectorEP.delete (path, request);
         }
 
@@ -118,18 +110,16 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action patch (string path, http:Request originalRequest) (http:Response, http:HttpConnectorError) {
-        http:Response response = {};
         json originalPayload = originalRequest.getJsonPayload();
 
-        accessTokenValue = constructAuthHeader (originalRequest, accessTokenValue, accessToken);
+        populateAuthHeader(originalRequest, accessToken);
         response, e = httpConnectorEP.patch (path, originalRequest);
 
         http:Request request = {};
         request.setJsonPayload(originalPayload);
 
-        if ((response.getStatusCode() == 401) && (refreshToken != "" || refreshToken != "null")) {
-            accessTokenValue = getAccessTokenFromRefreshToken(request, accessToken, clientId, clientSecret, refreshToken,
-                                                              refreshTokenEP, refreshTokenPath);
+        if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
+                                 refreshTokenPath)) {
             response, e = httpConnectorEP.patch (path, request);
         }
 
@@ -137,14 +127,24 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     }
 }
 
-function constructAuthHeader (http:Request request, string accessTokenValue, string accessToken) (string) {
+function populateAuthHeader (http:Request request, string accessToken) {
     if (accessTokenValue == "") {
         accessTokenValue = accessToken;
     }
 
     request.setHeader("Authorization", "Bearer " + accessTokenValue);
+}
 
-    return accessTokenValue;
+function checkAndRefreshToken(http:Request request, string accessToken, string clientId,
+                      string clientSecret, string refreshToken, string refreshTokenEP, string refreshTokenPath) (boolean){
+    boolean isRefreshed;
+    if ((response.getStatusCode() == 401) && (refreshToken != "" || refreshToken != "null")) {
+        accessTokenValue = getAccessTokenFromRefreshToken(request, accessToken, clientId, clientSecret, refreshToken,
+                                                          refreshTokenEP, refreshTokenPath);
+        isRefreshed = true;
+    }
+
+    return isRefreshed;
 }
 
 function getAccessTokenFromRefreshToken (http:Request request, string accessToken, string clientId, string clientSecret,
@@ -154,7 +154,6 @@ function getAccessTokenFromRefreshToken (http:Request request, string accessToke
         create http:HttpClient(refreshTokenEP, {});
     }
 
-    http:HttpConnectorError e;
     http:Request refreshTokenRequest = {};
     http:Response refreshTokenResponse = {};
     string accessTokenFromRefreshTokenReq;

@@ -128,7 +128,7 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
 }
 
 function populateAuthHeader (http:Request request, string accessToken) {
-    if (accessTokenValue == "") {
+    if (accessTokenValue == null) {
         accessTokenValue = accessToken;
     }
 
@@ -138,7 +138,7 @@ function populateAuthHeader (http:Request request, string accessToken) {
 function checkAndRefreshToken(http:Request request, string accessToken, string clientId,
                       string clientSecret, string refreshToken, string refreshTokenEP, string refreshTokenPath) (boolean){
     boolean isRefreshed;
-    if ((response.getStatusCode() == 401) && (refreshToken != "" || refreshToken != "null")) {
+    if ((response.getStatusCode() == 401) && refreshToken != null) {
         accessTokenValue = getAccessTokenFromRefreshToken(request, accessToken, clientId, clientSecret, refreshToken,
                                                           refreshTokenEP, refreshTokenPath);
         isRefreshed = true;

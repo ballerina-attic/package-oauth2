@@ -6,7 +6,7 @@ This can be used in other client connectors which use oauth2 authentication.
 ## Getting started
 
 1. Download the Ballerina tool distribution by navigating https://ballerinalang.org/downloads/
-2. Extract ballerina-oauth2-0.95.2.zip and copy ballerina-oauth2-0.95.2.jar into the `<ballerina-tools>/bre/lib` folder.
+2. Extract ballerina-oauth2-0.95.3.zip and copy ballerina-oauth2-0.95.3.jar into the `<ballerina-tools>/bre/lib` folder.
 
 
 ##### Prerequisites
@@ -99,4 +99,4 @@ refreshTokenPath - Resource path for refresh token endpoint.
 
 | Ballerina Version | oauth2 Connector Version |
 | ----------------- | ---------------------- |
-| 0.95.2 | 0.95.2 |
+| 0.95.3 | 0.95.3 |

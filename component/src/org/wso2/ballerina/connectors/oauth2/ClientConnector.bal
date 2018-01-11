@@ -162,7 +162,6 @@ function getAccessTokenFromRefreshToken (http:Request request, string accessToke
     accessTokenFromRefreshTokenReq = refreshTokenPath + "?refresh_token=" + refreshToken
                                      + "&grant_type=refresh_token&client_secret="
                                      + clientSecret + "&client_id=" + clientId;
-    refreshTokenRequest.setContentLength(0);
     refreshTokenResponse, e = refreshTokenHTTPEP.post(accessTokenFromRefreshTokenReq, refreshTokenRequest);
     accessTokenFromRefreshTokenJSONResponse = refreshTokenResponse.getJsonPayload();
     accessToken = accessTokenFromRefreshTokenJSONResponse.access_token.toString();

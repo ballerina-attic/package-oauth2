@@ -2,7 +2,7 @@ package org.wso2.ballerina.connectors.oauth2;
 
 import ballerina.net.http;
 
-string accessTokenValue;
+string accessTokenValue = "";
 http:HttpConnectorError e;
 http:Response response = {};
 
@@ -128,7 +128,7 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
 }
 
 function populateAuthHeader (http:Request request, string accessToken) {
-    if (accessTokenValue == null) {
+    if (accessTokenValue == "") {
         accessTokenValue = accessToken;
     }
 

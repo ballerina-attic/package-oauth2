@@ -100,3 +100,4 @@ refreshTokenPath - Resource path for refresh token endpoint.
 | Ballerina Version | oauth2 Connector Version |
 | ----------------- | ---------------------- |
 | 0.95.3 | 0.95.0 |
+| 0.95.6 | 0.95.1 |

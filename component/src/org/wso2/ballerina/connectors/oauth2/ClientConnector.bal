@@ -44,13 +44,13 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action post (string path, http:Request originalRequest) (http:Response, http:HttpConnectorError) {
-        json originalPayload = originalRequest.getJsonPayload();
+        var originalPayload = originalRequest.getBinaryPayload();
 
         populateAuthHeader(originalRequest, accessToken);
         response, e = httpConnectorEP.post (path, originalRequest);
 
         http:Request request = {};
-        request.setJsonPayload(originalPayload);
+        request.setBinaryPayload(originalPayload);
 
         if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
                                  refreshTokenPath)) {
@@ -66,13 +66,13 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action put (string path, http:Request originalRequest) (http:Response, http:HttpConnectorError) {
-        json originalPayload = originalRequest.getJsonPayload();
+        var originalPayload = originalRequest.getBinaryPayload();
 
         populateAuthHeader(originalRequest, accessToken);
         response, e = httpConnectorEP.put (path, originalRequest);
 
         http:Request request = {};
-        request.setJsonPayload(originalPayload);
+        request.setBinaryPayload(originalPayload);
 
         if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
                                  refreshTokenPath)) {
@@ -88,13 +88,13 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action delete (string path, http:Request originalRequest) (http:Response, http:HttpConnectorError) {
-        json originalPayload = originalRequest.getJsonPayload();
+        var originalPayload = originalRequest.getBinaryPayload();
 
         populateAuthHeader(originalRequest, accessToken);
         response, e = httpConnectorEP.delete (path, originalRequest);
 
         http:Request request = {};
-        request.setJsonPayload(originalPayload);
+        request.setBinaryPayload(originalPayload);
 
         if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
                                  refreshTokenPath)) {
@@ -110,13 +110,13 @@ public connector ClientConnector (string baseUrl, string accessToken, string cli
     @Return { value:"response object"}
     @Return { value:"Error occured during HTTP client invocation." }
     action patch (string path, http:Request originalRequest) (http:Response, http:HttpConnectorError) {
-        json originalPayload = originalRequest.getJsonPayload();
+        var originalPayload = originalRequest.getBinaryPayload();
 
         populateAuthHeader(originalRequest, accessToken);
         response, e = httpConnectorEP.patch (path, originalRequest);
 
         http:Request request = {};
-        request.setJsonPayload(originalPayload);
+        request.setBinaryPayload(originalPayload);
 
         if (checkAndRefreshToken(request, accessToken, clientId, clientSecret, refreshToken, refreshTokenEP,
                                  refreshTokenPath)) {

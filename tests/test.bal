@@ -14,11 +14,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package samples.wso2.oauth2;
+//package samples.wso2.oauth2;
 
-import ballerina.io;
-import src.wso2.oauth2;
-import ballerina.net.http;
+import ballerina/io;
+import oauth2;
+import ballerina/net.http;
 
 public function main (string[] args) {
     http:Request req = {};
@@ -30,7 +30,7 @@ public function main (string[] args) {
     var resp = oauth.get(args[7], req);
     match resp {
         http:Response res =>  io:println(res.getJsonPayload());
-        http:HttpConnectorError err => io:println("error");
+        http:HttpConnectorError err => io:println(err);
     }
 
     io:println("--------POST request-------");
@@ -39,7 +39,7 @@ public function main (string[] args) {
     var postResp = oauth.post(args[8], req);
     match postResp {
         http:Response res =>  io:println(res.getJsonPayload());
-        http:HttpConnectorError err => io:println("error");
+        http:HttpConnectorError err => io:println(err);
     }
 
 }

@@ -14,20 +14,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//package samples.wso2.oauth2;
+package tests;
 
 import ballerina/io;
 import oauth2;
 import ballerina/net.http;
 
 public function main (string[] args) {
-    http:Request req = {};
+
     // Send a GET request to the specified endpoint
-    oauth2:OAuth2Client oauth = {};
-    oauth.init(args[0], args[1], args[2], args[3], args[4], args[5], args[6],
-              "", "");
+    endpoint oauth2:OAuth2Endpoint oauth2EP {
+        baseUrl:args[0],
+    accessToken:args[1],
+        clientConfig:{},
+        refreshToken:args[2],
+        clientId:args[3],
+        clientSecret:args[4],
+        refreshTokenEP:args[5],
+        refreshTokenPath:args[6],
+        useUriParams:true
+    };
+    http:Request req = {};
     io:println("--------GET request-------");
-    var resp = oauth.get(args[7], req);
+    var resp = oauth2EP->get(args[7], req);
     match resp {
         http:Response res =>  io:println(res.getJsonPayload());
         http:HttpConnectorError err => io:println(err);
@@ -36,7 +45,7 @@ public function main (string[] args) {
     io:println("--------POST request-------");
     json spreadsheetJSONPayload = {"properties": {"title": "testBal"}};
     req.setJsonPayload(spreadsheetJSONPayload);
-    var postResp = oauth.post(args[8], req);
+    var postResp = oauth2EP->post(args[8], req);
     match postResp {
         http:Response res =>  io:println(res.getJsonPayload());
         http:HttpConnectorError err => io:println(err);

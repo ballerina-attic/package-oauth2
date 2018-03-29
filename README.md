@@ -3,16 +3,21 @@
 The OAuth2 connector allows you to handle the authentication flow with oauth2 authentication.
 This can be used in other client connectors which use oauth2 authentication.
 
+### Compatibility
+
+| Language Version | Connector Version |
+|-------|:------------:|
+| ballerina-0.970-alpha-1-SNAPSHOT | 0.2.1 |
+
 ## Getting started
-
-1. Download the Ballerina tool distribution by navigating https://ballerinalang.org/downloads/
-2. Extract ballerina-oauth2-0.95.0.zip and copy ballerina-oauth2-0.95.0.jar into the `<ballerina-tools>/bre/lib` folder.
-
+1. Clone package-oauth2 from [https://github.com/wso2-ballerina/package-oauth2](https://github.com/wso2-ballerina/package-oauth2).
+2. Import the package to your ballerina project.
 
 ##### Prerequisites
 
-1. Use this OAuth2 client connector instead of http client authenticator in other client connectors.
-2. Obtain the following parameters:
+1. Download the ballerina [distribution](https://ballerinalang.org/downloads/).
+2. Use this OAuth2 client connector instead of http client authenticator in other client connectors.
+3. Obtain the following parameters:
     * Access Token
     * Client Id
     * Client Secret
@@ -94,10 +99,3 @@ Here,
 refreshTokenEndpoint - The base url of the refresh token endpoint.
 
 refreshTokenPath - Resource path for refresh token endpoint.
-
-
-
-| Ballerina Version | oauth2 Connector Version |
-| ----------------- | ---------------------- |
-| 0.95.3 | 0.95.0 |
-| 0.95.6 | 0.95.1 |

@@ -19,6 +19,7 @@ package oauth2;
 import ballerina/io;
 import ballerina/net.http;
 import ballerina/mime;
+import ballerina/util;
 
 @Description {value:"Struct to initialize the connection."}
 public struct OAuth2Connector {
@@ -227,7 +228,7 @@ returns (boolean) | http:HttpConnectorError {
 }
 
 function <OAuth2Connector oAuth2Connector> getAccessTokenFromRefreshToken (http:Request request)
-                                                        returns (string) | http:HttpConnectorError {
+returns (string) | http:HttpConnectorError {
     http:HttpClient refreshTokenClient = http:createHttpClient(oAuth2Connector.refreshTokenEP,
                                                                oAuth2Connector.clientConfig);
     http:Request refreshTokenRequest = {};
@@ -235,21 +236,27 @@ function <OAuth2Connector oAuth2Connector> getAccessTokenFromRefreshToken (http:
     http:HttpConnectorError connectorError = {};
     boolean useUriParams = oAuth2Connector.useUriParams;
     string accessTokenFromRefreshTokenReq = oAuth2Connector.refreshTokenPath;
-    string requestParams = "refresh_token=" + oAuth2Connector.refreshToken
-                                            + "&grant_type=refresh_token&client_secret=" + oAuth2Connector.clientSecret
-                                            + "&client_id=" + oAuth2Connector.clientId;
-    if(useUriParams) {
+
+    if(!useUriParams) {
+        string clientIdSecret = oAuth2Connector.clientId + ":" + oAuth2Connector.clientSecret;
+        string base64ClientIdSecret = util:base64Encode(clientIdSecret);
         refreshTokenRequest.addHeader("Content-Type", "application/x-www-form-urlencoded");
-        refreshTokenRequest.setStringPayload(requestParams);
+        refreshTokenRequest.addHeader("Authorization", "Basic " + base64ClientIdSecret);
+        refreshTokenRequest.setStringPayload("grant_type=refresh_token&refresh_token=" + oAuth2Connector.refreshToken);
     } else {
+        string requestParams = "refresh_token=" + oAuth2Connector.refreshToken
+                               + "&grant_type=refresh_token&client_secret=" + oAuth2Connector.clientSecret
+                               + "&client_id=" + oAuth2Connector.clientId;
         accessTokenFromRefreshTokenReq = accessTokenFromRefreshTokenReq + "?" + requestParams;
     }
     var refreshTokenResponse = refreshTokenClient.post(accessTokenFromRefreshTokenReq, refreshTokenRequest);
+    io:println(httpRefreshTokenResponse);
     match refreshTokenResponse {
         http:Response httpResponse => httpRefreshTokenResponse = httpResponse;
         http:HttpConnectorError err => return err;
     }
     json accessTokenFromRefreshTokenJSONResponse =? httpRefreshTokenResponse.getJsonPayload();
+    io:println(accessTokenFromRefreshTokenJSONResponse);
 
     if (httpRefreshTokenResponse.statusCode == 200) {
         string accessToken = accessTokenFromRefreshTokenJSONResponse.access_token.toString();

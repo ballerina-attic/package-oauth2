@@ -28,6 +28,7 @@ public struct OAuth2Configuration {
     string refreshTokenEP;
     string refreshTokenPath;
     boolean useUriParams = false;
+    boolean sendRefreshParamsInBody = false;
     http:ClientEndpointConfiguration clientConfig;
 }
 
@@ -39,13 +40,14 @@ public struct OAuth2Endpoint {
 
 public function <OAuth2Endpoint oAuth2EP> init (OAuth2Configuration oAuth2Configuration) {
     oAuth2EP.oAuth2Connector = { accessToken:oAuth2Configuration.accessToken,
-                       refreshToken:oAuth2Configuration.refreshToken,
-                       clientId:oAuth2Configuration.clientId,
-                       clientSecret:oAuth2Configuration.clientSecret,
-                       refreshTokenEP:oAuth2Configuration.refreshTokenEP,
-                       refreshTokenPath:oAuth2Configuration.refreshTokenPath,
-                       useUriParams:oAuth2Configuration.useUriParams,
-                       httpClient:http:createHttpClient(oAuth2Configuration.baseUrl, oAuth2Configuration.clientConfig)};
+                                   refreshToken:oAuth2Configuration.refreshToken,
+                                   clientId:oAuth2Configuration.clientId,
+                                   clientSecret:oAuth2Configuration.clientSecret,
+                                   refreshTokenEP:oAuth2Configuration.refreshTokenEP,
+                                   refreshTokenPath:oAuth2Configuration.refreshTokenPath,
+                                   useUriParams:oAuth2Configuration.useUriParams,
+                                   sendRefreshParamsInBody:oAuth2Configuration.sendRefreshParamsInBody,
+                                   httpClient:http:createHttpClient(oAuth2Configuration.baseUrl, oAuth2Configuration.clientConfig)};
 }
 
 public function <OAuth2Endpoint oAuth2EP> register(typedesc serviceType) {

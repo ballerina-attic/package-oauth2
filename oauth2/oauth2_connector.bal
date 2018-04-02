@@ -16,7 +16,6 @@
 
 package oauth2;
 
-import ballerina/io;
 import ballerina/net.http;
 import ballerina/mime;
 import ballerina/util;
@@ -250,13 +249,13 @@ returns (string) | http:HttpConnectorError {
         accessTokenFromRefreshTokenReq = accessTokenFromRefreshTokenReq + "?" + requestParams;
     }
     var refreshTokenResponse = refreshTokenClient.post(accessTokenFromRefreshTokenReq, refreshTokenRequest);
-    io:println(httpRefreshTokenResponse);
+
     match refreshTokenResponse {
         http:Response httpResponse => httpRefreshTokenResponse = httpResponse;
         http:HttpConnectorError err => return err;
     }
     json accessTokenFromRefreshTokenJSONResponse =? httpRefreshTokenResponse.getJsonPayload();
-    io:println(accessTokenFromRefreshTokenJSONResponse);
+
 
     if (httpRefreshTokenResponse.statusCode == 200) {
         string accessToken = accessTokenFromRefreshTokenJSONResponse.access_token.toString();

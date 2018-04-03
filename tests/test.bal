@@ -24,31 +24,33 @@ public function main (string[] args) {
 
     // Send a GET request to the specified endpoint
     endpoint oauth2:OAuth2Endpoint oauth2EP {
-        baseUrl:args[0],
-    accessToken:args[1],
+        baseUrl:args[1],
+        accessToken:args[2],
         clientConfig:{},
-        refreshToken:args[2],
-        clientId:args[3],
-        clientSecret:args[4],
-        refreshTokenEP:args[5],
-        refreshTokenPath:args[6],
+        refreshToken:args[3],
+        clientId:args[4],
+        clientSecret:args[5],
+        refreshTokenEP:args[6],
+        refreshTokenPath:args[7],
         useUriParams:true
     };
     http:Request req = {};
-    io:println("--------GET request-------");
-    var resp = oauth2EP->get(args[7], req);
-    match resp {
-        http:Response res =>  io:println(res.getJsonPayload());
-        http:HttpConnectorError err => io:println(err);
+    if (args[0] == "get") {
+        io:println("--------GET request-------");
+        var resp = oauth2EP -> get(args[8], req);
+        match resp {
+            http:Response res =>  io:println(res.getJsonPayload());
+            http:HttpConnectorError err => io:println(err);
+        }
     }
-
-    io:println("--------POST request-------");
-    json spreadsheetJSONPayload = {"properties": {"title": "testBal"}};
-    req.setJsonPayload(spreadsheetJSONPayload);
-    var postResp = oauth2EP->post(args[8], req);
-    match postResp {
-        http:Response res =>  io:println(res.getJsonPayload());
-        http:HttpConnectorError err => io:println(err);
+    if (args[0] == "post") {
+        io:println("--------POST request-------");
+        json spreadsheetJSONPayload = {"properties": {"title": "testBal"}};
+        req.setJsonPayload(spreadsheetJSONPayload);
+        var postResp = oauth2EP -> post(args[8], req);
+        match postResp {
+            http:Response res =>  io:println(res.getJsonPayload());
+            http:HttpConnectorError err => io:println(err);
+        }
     }
-
 }

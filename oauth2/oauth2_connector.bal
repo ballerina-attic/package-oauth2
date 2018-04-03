@@ -30,7 +30,7 @@ public struct OAuth2Connector {
     string refreshTokenEP;
     string refreshTokenPath;
     boolean useUriParams = false;
-    boolean sendRefreshParamsInBody = false;
+    boolean setCredentialsInHeader = false;
     http:HttpClient httpClient;
     http:ClientEndpointConfiguration clientConfig;
 }
@@ -39,7 +39,7 @@ http:Response response = {};
 http:HttpConnectorError httpConnectorError = {};
 
 public function <OAuth2Connector oAuth2Connector> get (string path, http:Request originalRequest)
-returns http:Response | http:HttpConnectorError {
+                                                            returns http:Response | http:HttpConnectorError {
     match oAuth2Connector.canProcess(originalRequest) {
         http:HttpConnectorError err => return err;
         boolean val => {
@@ -69,7 +69,7 @@ returns http:Response | http:HttpConnectorError {
 }
 
 public function <OAuth2Connector oAuth2Connector> post (string path, http:Request originalRequest)
-returns http:Response | http:HttpConnectorError {
+                                                            returns http:Response | http:HttpConnectorError {
     json originalPayload =? originalRequest.getJsonPayload();
     match oAuth2Connector.canProcess(originalRequest) {
         http:HttpConnectorError err => return err;
@@ -101,7 +101,7 @@ returns http:Response | http:HttpConnectorError {
 }
 
 public function <OAuth2Connector oAuth2Connector> put (string path, http:Request originalRequest)
-returns http:Response | http:HttpConnectorError {
+                                                            returns http:Response | http:HttpConnectorError {
     json originalPayload =? originalRequest.getJsonPayload();
     match oAuth2Connector.canProcess(originalRequest) {
         http:HttpConnectorError err => return err;
@@ -133,7 +133,7 @@ returns http:Response | http:HttpConnectorError {
 }
 
 public function <OAuth2Connector oAuth2Connector> patch (string path, http:Request originalRequest)
-returns http:Response | http:HttpConnectorError {
+                                                            returns http:Response | http:HttpConnectorError {
     json originalPayload =? originalRequest.getJsonPayload();
     match oAuth2Connector.canProcess(originalRequest) {
         http:HttpConnectorError err => return err;
@@ -166,7 +166,7 @@ returns http:Response | http:HttpConnectorError {
 
 
 public function <OAuth2Connector oAuth2Connector> delete (string path, http:Request originalRequest)
-returns http:Response | http:HttpConnectorError {
+                                                            returns http:Response | http:HttpConnectorError {
     match oAuth2Connector.canProcess(originalRequest) {
         http:HttpConnectorError err => return err;
         boolean val => {
@@ -196,9 +196,10 @@ returns http:Response | http:HttpConnectorError {
 }
 
 function <OAuth2Connector oAuth2Connector> canProcess (http:Request request)
-returns (boolean) | http:HttpConnectorError {
+                                                            returns (boolean) | http:HttpConnectorError {
     if (oAuth2Connector.accessToken == "") {
-        if (oAuth2Connector.refreshToken != "") {
+        if (oAuth2Connector.refreshToken != "" && oAuth2Connector.clientId != ""
+                                                && oAuth2Connector.clientSecret != "") {
             var  accessTokenValueResponse = oAuth2Connector.getAccessTokenFromRefreshToken(request);
             match accessTokenValueResponse {
                 string accessTokenString => request.setHeader("Authorization", "Bearer " + accessTokenString);
@@ -215,8 +216,9 @@ returns (boolean) | http:HttpConnectorError {
 }
 
 function <OAuth2Connector oAuth2Connector> checkAndRefreshToken (http:Request request)
-returns (boolean) | http:HttpConnectorError {
-    if ((response.statusCode == 401) && oAuth2Connector.refreshToken != "") {
+                                                            returns (boolean) | http:HttpConnectorError {
+    if ((response.statusCode == 401) && oAuth2Connector.refreshToken != "" && oAuth2Connector.clientId != ""
+                                                                        && oAuth2Connector.clientSecret != "") {
         var accessTokenValueResponse = oAuth2Connector.getAccessTokenFromRefreshToken(request);
         match accessTokenValueResponse {
             string accessTokenString => request.setHeader("Authorization", "Bearer " + accessTokenString);
@@ -228,19 +230,19 @@ returns (boolean) | http:HttpConnectorError {
 }
 
 function <OAuth2Connector oAuth2Connector> getAccessTokenFromRefreshToken (http:Request request)
-returns (string) | http:HttpConnectorError {
+                                                            returns (string) | http:HttpConnectorError {
     http:HttpClient refreshTokenClient = http:createHttpClient(oAuth2Connector.refreshTokenEP,
                                                                oAuth2Connector.clientConfig);
     http:Request refreshTokenRequest = {};
     http:Response httpRefreshTokenResponse = {};
     http:HttpConnectorError connectorError = {};
     boolean useUriParams = oAuth2Connector.useUriParams;
-    boolean sendRefreshParamsInBody = oAuth2Connector.sendRefreshParamsInBody;
+    boolean setCredentialsInHeader = oAuth2Connector.setCredentialsInHeader;
     string accessTokenFromRefreshTokenReq = oAuth2Connector.refreshTokenPath;
     string requestParams = "refresh_token=" + oAuth2Connector.refreshToken
                            + "&grant_type=refresh_token&client_secret=" + oAuth2Connector.clientSecret
                            + "&client_id=" + oAuth2Connector.clientId;
-    if(sendRefreshParamsInBody) {
+    if(setCredentialsInHeader) {
         string clientIdSecret = oAuth2Connector.clientId + ":" + oAuth2Connector.clientSecret;
         string base64ClientIdSecret = util:base64Encode(clientIdSecret);
         refreshTokenRequest.addHeader("Content-Type", "application/x-www-form-urlencoded");

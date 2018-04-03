@@ -7,7 +7,7 @@ This can be used in other client connectors which use oauth2 authentication.
 
 | Language Version | Connector Version |
 |-------|:------------:|
-| ballerina-0.970-alpha-1-SNAPSHOT | 0.2.1 |
+| ballerina-0.970-alpha-1-SNAPSHOT | 0.970-alpha-1-SNAPSHOT |
 
 ## Getting started
 1. Clone package-oauth2 from [https://github.com/wso2-ballerina/package-oauth2](https://github.com/wso2-ballerina/package-oauth2).
@@ -67,28 +67,27 @@ The patch action allows to use http patch action with oauth2 authentication flow
 
 ##### Invoke the actions
 
-- Copy `connector-oauth2/component/samples/oauth2/samples.bal` file and paste it into `<ballerina-tools>/bin` folder.
 - Run the following commands to execute the relevant action.
 
 1. **get:**
     
-`bin$ ./ballerina run samples.bal get <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
+`bin$ ./ballerina run tests get <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
     
 2. **post:**
     
-`bin$ ./ballerina run samples.bal post <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
+`bin$ ./ballerina run tests post <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
     
 3. **put:**
 
-`bin$ ./ballerina run samples.bal put <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
+`bin$ ./ballerina run tests put <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
  
 4. **delete:**
     
-`bin$ ./ballerina run samples.bal delete <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
+`bin$ ./ballerina run tests delete <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
 
 5. **patch:**
  
-`bin$ ./ballerina run samples.bal patch <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
+`bin$ ./ballerina run tests patch <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
  
 
 

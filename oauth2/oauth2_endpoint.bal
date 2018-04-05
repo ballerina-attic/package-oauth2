@@ -1,4 +1,4 @@
-// Copyright (c) 2018 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -14,12 +14,47 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package oauth2;
+import ballerina/http;
 
-import ballerina/net.http;
+public type OAuth2Client object {
+    public {
+        OAuth2Connector conn;
+        OAuth2ClientEndpointConfig config;
+    }
 
-@Description {value:"Struct to define the OAuth2 configuration."}
-public struct OAuth2Configuration {
+    new () {
+
+    }
+
+    public function init(OAuth2ClientEndpointConfig config) {
+        self.config = config;
+        self.conn = new (config.accessToken, config.refreshToken, config.clientId, config.clientSecret,
+            config.refreshTokenEP, config.refreshTokenPath, config.useUriParams, config.setCredentialsInHeader,
+            http:createHttpClient(config.baseUrl, config.clientConfig));
+    }
+
+    public function register(typedesc serviceType) {
+
+    }
+
+    public function start() {
+
+    }
+
+    //@Description { value:"Returns the connector that client code uses"
+    //@Return { value:"The connector that client code uses" }
+    public function getClient() returns OAuth2Connector {
+        return self.conn;
+    }
+
+    //@Description { value:"Stops the registered service"}
+    //@Return { value:"Error occured during registration" }
+    public function stop() {
+
+    }
+}
+
+type OAuth2ClientEndpointConfig {
     string accessToken;
     string baseUrl;
     string clientId;
@@ -30,44 +65,4 @@ public struct OAuth2Configuration {
     boolean useUriParams = false;
     boolean setCredentialsInHeader = false;
     http:ClientEndpointConfiguration clientConfig;
-}
-
-@Description {value:"OAuth2 Endpoint struct."}
-public struct OAuth2Endpoint {
-    OAuth2Configuration oAuth2Config;
-    OAuth2Connector oAuth2Connector;
-}
-
-public function <OAuth2Endpoint oAuth2EP> init (OAuth2Configuration oAuth2Configuration) {
-    oAuth2EP.oAuth2Connector = {
-        accessToken:oAuth2Configuration.accessToken,
-        refreshToken:oAuth2Configuration.refreshToken,
-        clientId:oAuth2Configuration.clientId,
-        clientSecret:oAuth2Configuration.clientSecret,
-        refreshTokenEP:oAuth2Configuration.refreshTokenEP,
-        refreshTokenPath:oAuth2Configuration.refreshTokenPath,
-        useUriParams:oAuth2Configuration.useUriParams,
-        setCredentialsInHeader:oAuth2Configuration.setCredentialsInHeader,
-        httpClient:http:createHttpClient(oAuth2Configuration.baseUrl, oAuth2Configuration.clientConfig)
-    };
-}
-
-public function <OAuth2Endpoint oAuth2EP> register(typedesc serviceType) {
-
-}
-
-public function <OAuth2Endpoint oAuth2EP> start() {
-
-}
-
-@Description { value:"Returns the connector that client code uses"}
-@Return { value:"The connector that client code uses" }
-public function <OAuth2Endpoint oAuth2EP> getClient() returns OAuth2Connector {
-    return oAuth2EP.oAuth2Connector;
-}
-
-@Description { value:"Stops the registered service"}
-@Return { value:"Error occured during registration" }
-public function <OAuth2Endpoint oAuth2EP> stop() {
-
 }

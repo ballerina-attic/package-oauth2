@@ -14,16 +14,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package tests;
-
 import ballerina/io;
 import oauth2;
-import ballerina/net.http;
+import ballerina/http;
 
 public function main (string[] args) {
 
     // Send a GET request to the specified endpoint
-    endpoint oauth2:OAuth2Endpoint oauth2EP {
+    endpoint oauth2:OAuth2Client oauth2EP {
         baseUrl:args[1],
         accessToken:args[2],
         clientConfig:{},

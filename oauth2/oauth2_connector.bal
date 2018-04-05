@@ -71,7 +71,7 @@ public type OAuth2Connector object {
     }
 
     public function post (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
-        json originalPayload =? originalRequest.getJsonPayload();
+        json originalPayload = originalRequest.getJsonPayload() but {mime:EntityError err => io:println(err)} ;
         match self.canProcess(originalRequest) {
             http:HttpConnectorError err => return err;
             boolean val => {
@@ -101,7 +101,7 @@ public type OAuth2Connector object {
     }
 
     public function put (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
-        json originalPayload =? originalRequest.getJsonPayload();
+        json originalPayload = originalRequest.getJsonPayload() but {mime:EntityError err => io:println(err)};
         match self.canProcess(originalRequest) {
             http:HttpConnectorError err => return err;
             boolean val => {
@@ -132,7 +132,7 @@ public type OAuth2Connector object {
     }
 
     public function patch (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
-        json originalPayload =? originalRequest.getJsonPayload();
+        json originalPayload = originalRequest.getJsonPayload() but {mime:EntityError err => io:println(err)};
         match self.canProcess(originalRequest) {
             http:HttpConnectorError err => return err;
             boolean val => {
@@ -252,7 +252,10 @@ public type OAuth2Connector object {
             http:Response httpResponse => httpRefreshTokenResponse = httpResponse;
             http:HttpConnectorError err => return err;
         }
-        json accessTokenFromRefreshTokenJSONResponse =? httpRefreshTokenResponse.getJsonPayload();
+
+        json accessTokenFromRefreshTokenJSONResponse = httpRefreshTokenResponse.getJsonPayload() but {
+                                                                                mime:EntityError err => io:println(err)
+                                                                            };
 
         if (httpRefreshTokenResponse.statusCode == 200) {
             string accessToken = accessTokenFromRefreshTokenJSONResponse.access_token.toString();

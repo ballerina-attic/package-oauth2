@@ -102,7 +102,8 @@ public type OAuth2Connector object {
     }
 
     public function put (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
-        json originalPayload = originalRequest.getJsonPayload();
+        var responseJson = originalRequest.getJsonPayload();
+        json originalPayload = check responseJson;
         match self.canProcess(originalRequest) {
             http:HttpConnectorError err => return err;
             boolean val => {

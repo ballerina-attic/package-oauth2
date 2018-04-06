@@ -54,15 +54,22 @@ public type OAuth2Client object {
     }
 };
 
-public type OAuth2ClientEndpointConfig {
-    string accessToken;
-    string baseUrl;
-    string clientId;
-    string clientSecret;
-    string refreshToken;
-    string refreshTokenEP;
-    string refreshTokenPath;
-    boolean useUriParams = false;
-    boolean setCredentialsInHeader = false;
-    http:ClientEndpointConfiguration clientConfig;
+public type OAuth2ClientEndpointConfig object {
+    public {
+        string accessToken;
+        string baseUrl;
+        string clientId;
+        string clientSecret;
+        string refreshToken;
+        string refreshTokenEP;
+        string refreshTokenPath;
+        boolean useUriParams = false;
+        boolean setCredentialsInHeader = false;
+        http:ClientEndpointConfiguration clientConfig;
+    }
+
+    @Description {value:"Set the client configuration."}
+    public function GmailConfiguration() {
+        self.clientConfig = {};
+    }
 };

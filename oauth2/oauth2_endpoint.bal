@@ -54,7 +54,7 @@ public type OAuth2Client object {
     }
 };
 
-type OAuth2ClientEndpointConfig {
+public type OAuth2ClientEndpointConfig {
     string accessToken;
     string baseUrl;
     string clientId;

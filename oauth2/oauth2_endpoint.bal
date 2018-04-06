@@ -52,7 +52,7 @@ public type OAuth2Client object {
     public function stop() {
 
     }
-}
+};
 
 type OAuth2ClientEndpointConfig {
     string accessToken;
@@ -65,4 +65,4 @@ type OAuth2ClientEndpointConfig {
     boolean useUriParams = false;
     boolean setCredentialsInHeader = false;
     http:ClientEndpointConfiguration clientConfig;
-}
+};

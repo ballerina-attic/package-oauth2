@@ -38,7 +38,7 @@ public type OAuth2Connector object {
     }
 
     new (accessToken, baseUrl, clientId, clientSecret, refreshToken, refreshTokenEP, refreshTokenPath, useUriParams,
-                                                                    setCredentialsInHeader, httpClient, clientConfig) {
+                                                                setCredentialsInHeader, httpClient, clientConfig) {
     }
 
     public function get (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
@@ -71,7 +71,8 @@ public type OAuth2Connector object {
     }
 
     public function post (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
-        json originalPayload = originalRequest.getJsonPayload() but {mime:EntityError err => io:println(err)} ;
+        var requestJson = originalRequest.getJsonPayload();
+        json originalPayload = check requestJson;
         match self.canProcess(originalRequest) {
             http:HttpConnectorError err => return err;
             boolean val => {
@@ -101,7 +102,7 @@ public type OAuth2Connector object {
     }
 
     public function put (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
-        json originalPayload = originalRequest.getJsonPayload() but {mime:EntityError err => io:println(err)};
+        json originalPayload = originalRequest.getJsonPayload();
         match self.canProcess(originalRequest) {
             http:HttpConnectorError err => return err;
             boolean val => {
@@ -132,7 +133,8 @@ public type OAuth2Connector object {
     }
 
     public function patch (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
-        json originalPayload = originalRequest.getJsonPayload() but {mime:EntityError err => io:println(err)};
+        var requestJson = originalRequest.getJsonPayload();
+        json originalPayload = check requestJson;
         match self.canProcess(originalRequest) {
             http:HttpConnectorError err => return err;
             boolean val => {
@@ -252,10 +254,8 @@ public type OAuth2Connector object {
             http:Response httpResponse => httpRefreshTokenResponse = httpResponse;
             http:HttpConnectorError err => return err;
         }
-
-        json accessTokenFromRefreshTokenJSONResponse = httpRefreshTokenResponse.getJsonPayload() but {
-                                                                                mime:EntityError err => io:println(err)
-                                                                            };
+        var requestAccessTokenJson = httpRefreshTokenResponse.getJsonPayload();
+        json accessTokenFromRefreshTokenJSONResponse = check requestAccessTokenJson;
 
         if (httpRefreshTokenResponse.statusCode == 200) {
             string accessToken = accessTokenFromRefreshTokenJSONResponse.access_token.toString();
@@ -269,4 +269,4 @@ public type OAuth2Connector object {
         }
         return self.accessToken;
     }
-}
+};

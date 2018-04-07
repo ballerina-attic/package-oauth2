@@ -40,7 +40,7 @@ public type OAuth2Client object {
 
     }
 
-    @Description {value:"Returns the connector that client code uses"
+    @Description {value:"Returns the connector that client code uses"}
     @Return {value:"The connector that client code uses"}
     public function getClient() returns OAuth2Connector {
         return self.conn;

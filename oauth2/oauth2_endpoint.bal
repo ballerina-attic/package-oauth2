@@ -28,8 +28,9 @@ public type OAuth2Client object {
 
     public function init(OAuth2ClientEndpointConfig config) {
         self.config = config;
-        self.conn = new (config.accessToken, config.baseUrl, config.clientId, config.clientSecret, config.refreshToken, config.refreshTokenEP, config.refreshTokenPath, config.useUriParams,
-            config.setCredentialsInHeader, http:createHttpClient(config.baseUrl, config.clientConfig), config.clientConfig);
+        self.conn = new (config.accessToken, config.baseUrl, config.clientId, config.clientSecret, config.refreshToken,
+            config.refreshTokenEP, config.refreshTokenPath, config.useUriParams, config.setCredentialsInHeader,
+            http:createHttpClient(config.baseUrl, config.clientConfig), config.clientConfig);
     }
 
     public function register(typedesc serviceType) {

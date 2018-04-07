@@ -28,9 +28,8 @@ public type OAuth2Client object {
 
     public function init(OAuth2ClientEndpointConfig config) {
         self.config = config;
-        self.conn = new (config.accessToken, config.refreshToken, config.clientId, config.clientSecret,
-            config.refreshTokenEP, config.refreshTokenPath, config.useUriParams, config.setCredentialsInHeader,
-            http:createHttpClient(config.baseUrl, config.clientConfig));
+        self.conn = new (config.accessToken, config.baseUrl, config.clientId, config.clientSecret, config.refreshToken, config.refreshTokenEP, config.refreshTokenPath, config.useUriParams,
+            config.setCredentialsInHeader, http:createHttpClient(config.baseUrl, config.clientConfig), config.clientConfig);
     }
 
     public function register(typedesc serviceType) {
@@ -41,35 +40,28 @@ public type OAuth2Client object {
 
     }
 
-    //@Description { value:"Returns the connector that client code uses"
-    //@Return { value:"The connector that client code uses" }
+    @Description {value:"Returns the connector that client code uses"
+    @Return {value:"The connector that client code uses"}
     public function getClient() returns OAuth2Connector {
         return self.conn;
     }
 
-    //@Description { value:"Stops the registered service"}
-    //@Return { value:"Error occured during registration" }
+    @Description {value:"Stops the registered service"}
+    @Return {value:"Error occured during registration"}
     public function stop() {
 
     }
 };
 
-public type OAuth2ClientEndpointConfig object {
-    public {
-        string accessToken;
-        string baseUrl;
-        string clientId;
-        string clientSecret;
-        string refreshToken;
-        string refreshTokenEP;
-        string refreshTokenPath;
-        boolean useUriParams = false;
-        boolean setCredentialsInHeader = false;
-        http:ClientEndpointConfiguration clientConfig;
-    }
-
-    @Description {value:"Set the client configuration."}
-    public function GmailConfiguration() {
-        self.clientConfig = {};
-    }
+public type OAuth2ClientEndpointConfig {
+    string accessToken;
+    string baseUrl;
+    string clientId;
+    string clientSecret;
+    string refreshToken;
+    string refreshTokenEP;
+    string refreshTokenPath;
+    boolean useUriParams = false;
+    boolean setCredentialsInHeader = false;
+    http:ClientEndpointConfiguration clientConfig;
 };

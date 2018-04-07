@@ -38,7 +38,7 @@ public type OAuth2Connector object {
     }
 
     new (accessToken, baseUrl, clientId, clientSecret, refreshToken, refreshTokenEP, refreshTokenPath, useUriParams,
-                                                                setCredentialsInHeader, httpClient, clientConfig) {
+    setCredentialsInHeader, httpClient, clientConfig) {
     }
 
     public function get (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
@@ -50,7 +50,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = {};
+                        http:Request request = new ();
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
                             boolean isRefreshed => {
@@ -81,7 +81,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = {};
+                        http:Request request = new ();
                         request.setJsonPayload(originalPayload);
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
@@ -101,7 +101,7 @@ public type OAuth2Connector object {
         return response;
     }
 
-    public function put (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
+    public function put(string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
         var responseJson = originalRequest.getJsonPayload();
         json originalPayload = check responseJson;
         match self.canProcess(originalRequest) {
@@ -112,7 +112,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = {};
+                        http:Request request = new ();
                         request.setJsonPayload(originalPayload);
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
@@ -133,7 +133,7 @@ public type OAuth2Connector object {
         return response;
     }
 
-    public function patch (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
+    public function patch(string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
         var requestJson = originalRequest.getJsonPayload();
         json originalPayload = check requestJson;
         match self.canProcess(originalRequest) {
@@ -144,7 +144,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = {};
+                        http:Request request = new ();
                         request.setJsonPayload(originalPayload);
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
@@ -165,7 +165,7 @@ public type OAuth2Connector object {
         return response;
     }
 
-    public function delete (string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
+    public function delete(string path, http:Request originalRequest) returns http:Response|http:HttpConnectorError {
         match self.canProcess(originalRequest) {
             http:HttpConnectorError err => return err;
             boolean val => {
@@ -174,7 +174,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = {};
+                        http:Request request = new ();
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
                             boolean isRefreshed => {
@@ -185,7 +185,6 @@ public type OAuth2Connector object {
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -194,7 +193,7 @@ public type OAuth2Connector object {
         return response;
     }
 
-    function canProcess (http:Request request) returns (boolean)|http:HttpConnectorError {
+    function canProcess(http:Request request) returns (boolean)|http:HttpConnectorError {
         if (self.accessToken == "") {
             if (self.refreshToken != "" && self.clientId != ""
             && self.clientSecret != "") {
@@ -213,7 +212,7 @@ public type OAuth2Connector object {
         return true;
     }
 
-    function checkAndRefreshToken (http:Request request) returns (boolean)|http:HttpConnectorError {
+    function checkAndRefreshToken(http:Request request) returns (boolean)|http:HttpConnectorError {
         if ((response.statusCode == 401) && self.refreshToken != "" && self.clientId != ""
         && self.clientSecret != "") {
             var accessTokenValueResponse = self.getAccessTokenFromRefreshToken(request);
@@ -226,11 +225,11 @@ public type OAuth2Connector object {
         return false;
     }
 
-    function getAccessTokenFromRefreshToken (http:Request request) returns (string)|http:HttpConnectorError {
+    function getAccessTokenFromRefreshToken(http:Request request) returns (string)|http:HttpConnectorError {
         http:HttpClient refreshTokenClient = http:createHttpClient(self.refreshTokenEP,
             self.clientConfig);
-        http:Request refreshTokenRequest = {};
-        http:Response httpRefreshTokenResponse = {};
+        http:Request refreshTokenRequest = new ();
+        http:Response httpRefreshTokenResponse = new ();
         http:HttpConnectorError connectorError = {};
         boolean useUriParams = self.useUriParams;
         boolean setCredentialsInHeader = self.setCredentialsInHeader;
@@ -238,9 +237,16 @@ public type OAuth2Connector object {
         string requestParams = "refresh_token=" + self.refreshToken
         + "&grant_type=refresh_token&client_secret=" + self.clientSecret
         + "&client_id=" + self.clientId;
+        string base64ClientIdSecret;
         if (setCredentialsInHeader) {
             string clientIdSecret = self.clientId + ":" + self.clientSecret;
-            string base64ClientIdSecret = util:base64Encode(clientIdSecret);
+            match (util:base64EncodeString(clientIdSecret)){
+                string encodeString => base64ClientIdSecret = encodeString;
+                util:Base64EncodeError err => {
+                    httpConnectorError.message = err.message;
+                    return httpConnectorError;
+                }
+            }
             refreshTokenRequest.addHeader("Content-Type", "application/x-www-form-urlencoded");
             refreshTokenRequest.addHeader("Authorization", "Basic " + base64ClientIdSecret);
             refreshTokenRequest.setStringPayload("grant_type=refresh_token&refresh_token=" + self.refreshToken);
@@ -259,13 +265,13 @@ public type OAuth2Connector object {
         json accessTokenFromRefreshTokenJSONResponse = check requestAccessTokenJson;
 
         if (httpRefreshTokenResponse.statusCode == 200) {
-            string accessToken = accessTokenFromRefreshTokenJSONResponse.access_token.toString();
+            string accessToken = accessTokenFromRefreshTokenJSONResponse.access_token.toString() but { () => "" };
             self.accessToken = accessToken;
-            if (accessTokenFromRefreshTokenJSONResponse.refresh_token != null) {
-                self.refreshToken = accessTokenFromRefreshTokenJSONResponse.refresh_token.toString();
+            if (accessTokenFromRefreshTokenJSONResponse.refresh_token != ()) {
+                self.refreshToken = accessTokenFromRefreshTokenJSONResponse.refresh_token.toString() but { () => "" };
             }
         } else {
-            connectorError.message = accessTokenFromRefreshTokenJSONResponse.toString();
+            connectorError.message = accessTokenFromRefreshTokenJSONResponse.toString() but { () => "" };
             return connectorError;
         }
         return self.accessToken;

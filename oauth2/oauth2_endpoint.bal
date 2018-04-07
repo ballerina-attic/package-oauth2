@@ -16,22 +16,29 @@
 
 import ballerina/http;
 
+@Description {value:"Represents an OAuth2 client endpoint"}
+@Field {value:"conn: The OAuth2Connector of the endpoint"}
+@Field {value:"config: The OAuth2 client endpoint configurations"}
 public type OAuth2Client object {
     public {
         OAuth2Connector conn;
-        OAuth2ClientEndpointConfig config;
+        OAuth2ClientEndpointConfiguration config;
     }
 
     new () {
 
     }
 
-    public function init(OAuth2ClientEndpointConfig config) {
+    @Description {value:"Gets called when the endpoint is being initialized"}
+    @Param {value:"config: The OAuth2ClientEndpointConfiguration of the endpoint"}
+    public function init(OAuth2ClientEndpointConfiguration config) {
         self.config = config;
+        //Initalize OAuth2Connector with OAuth2ClientEndpoint Configurations
         self.conn = new (config.accessToken, config.baseUrl, config.clientId, config.clientSecret, config.refreshToken,
             config.refreshTokenEP, config.refreshTokenPath, config.useUriParams, config.setCredentialsInHeader,
             http:createHttpClient(config.baseUrl, config.clientConfig), config.clientConfig);
     }
+
 
     public function register(typedesc serviceType) {
 
@@ -54,7 +61,18 @@ public type OAuth2Client object {
     }
 };
 
-public type OAuth2ClientEndpointConfig {
+@Description {value:"OAuth2ClientEndpointConfiguration represents options to be used for OAuth2 client invocation"}
+@Field {value:"accessToken: Access token for OAuth2Endpoint"}
+@Field {value:"baseUrl: The base url of the api"}
+@Field {value:"clientId: The client id"}
+@Field {value:"clientSecret: The client secret"}
+@Field {value:"refreshToken: The refresh token"}
+@Field {value:"refreshTokenEP: The base endpoint url to use refresh token"}
+@Field {value:"refreshTokenPath: The path of refresh token url"}
+@Field {value:"useUriParams: Specifies whehter use uri parameters. The default value is false."}
+@Field {value:"setCredentialsHeader: Specifies whether to set credentials as headers. The default value is false."}
+@field {value:"clientConfig: ClientEndpointConfiguration to use for HTTP client invocation"}
+public type OAuth2ClientEndpointConfiguration {
     string accessToken;
     string baseUrl;
     string clientId;

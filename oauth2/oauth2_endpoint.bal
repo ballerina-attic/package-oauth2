@@ -19,7 +19,7 @@ import ballerina/http;
 @Description {value:"Represents an OAuth2 client endpoint"}
 @Field {value:"conn: The OAuth2Connector of the endpoint"}
 @Field {value:"config: The OAuth2 client endpoint configurations"}
-public type OAuth2Client object {
+public type Client object {
     public {
         OAuth2Connector conn;
         OAuth2ClientEndpointConfiguration config;

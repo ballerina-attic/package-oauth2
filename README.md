@@ -24,6 +24,8 @@ This can be used in other client connectors which use oauth2 authentication.
     * Refresh Token
     * Refresh Token Endpoint
 
+When initializing, you can either provide Access Token only or Client Id, Client Secret, Refresh Token and Refresh Token Endpoint only.
+
 **IMPORTANT:** This access token can be used to make API requests on your own account's behalf. Do not share your access token with anyone.
 
 ## Working with Oauth2 REST connector actions
@@ -63,38 +65,4 @@ The patch action allows to use http patch action with oauth2 authentication flow
 * path -  The path of the endpoint.
 * request -  The request message.
 
-## Running samples
 
-##### Invoke the actions
-
-- Run the following commands to execute the relevant action.
-
-1. **get:**
-    
-`bin$ ./ballerina run tests get <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
-    
-2. **post:**
-    
-`bin$ ./ballerina run tests post <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
-    
-3. **put:**
-
-`bin$ ./ballerina run tests put <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
- 
-4. **delete:**
-    
-`bin$ ./ballerina run tests delete <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
-
-5. **patch:**
- 
-`bin$ ./ballerina run tests patch <baseUrl> <accessToken> <clientId> <clientSecret> <refreshToken> <refreshTokenEndPoint> <refreshTokenPath> <path>`
- 
-
-
-**Note:** If you are not passing refresh token in the request, access token won't be refreshed.
-
-Here, 
-
-refreshTokenEndpoint - The base url of the refresh token endpoint.
-
-refreshTokenPath - Resource path for refresh token endpoint.

@@ -71,7 +71,7 @@ public type OAuth2Client object {
 @Field {value:"refreshTokenPath: The path of refresh token url"}
 @Field {value:"useUriParams: Specifies whehter use uri parameters. The default value is false."}
 @Field {value:"setCredentialsHeader: Specifies whether to set credentials as headers. The default value is false."}
-@field {value:"clientConfig: ClientEndpointConfiguration to use for HTTP client invocation"}
+@Field {value:"clientConfig: ClientEndpointConfiguration to use for HTTP client invocation"}
 public type OAuth2ClientEndpointConfiguration {
     string accessToken;
     string baseUrl;

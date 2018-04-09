@@ -21,7 +21,7 @@ import ballerina/util;
 
 public function main(string[] args) {
     // Send a GET request to the specified endpoint
-    endpoint OAuth2Client oauth2EP {
+    endpoint Client oauth2EP {
         accessToken:args[0],
         clientId:args[1],
         clientSecret:args[2],

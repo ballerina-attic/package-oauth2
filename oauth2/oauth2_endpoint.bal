@@ -19,7 +19,7 @@ import ballerina/http;
 @Description {value:"Represents an OAuth2 client endpoint"}
 @Field {value:"conn: The OAuth2Connector of the endpoint"}
 @Field {value:"config: The OAuth2 client endpoint configurations"}
-public type OAuth2Client object {
+public type Client object {
     public {
         OAuth2Connector conn;
         OAuth2ClientEndpointConfiguration config;
@@ -71,7 +71,7 @@ public type OAuth2Client object {
 @Field {value:"refreshTokenPath: The path of refresh token url"}
 @Field {value:"useUriParams: Specifies whehter use uri parameters. The default value is false."}
 @Field {value:"setCredentialsHeader: Specifies whether to set credentials as headers. The default value is false."}
-@field {value:"clientConfig: ClientEndpointConfiguration to use for HTTP client invocation"}
+@Field {value:"clientConfig: ClientEndpointConfiguration to use for HTTP client invocation"}
 public type OAuth2ClientEndpointConfiguration {
     string accessToken;
     string baseUrl;

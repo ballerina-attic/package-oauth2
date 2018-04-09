@@ -1,8 +1,8 @@
 ### Compatibility
 
-| Language Version | Connector Version |
-|-------|:------------:|
-| ballerina-0.970-alpha-1-SNAPSHOT | 0.970-alpha-1-SNAPSHOT |
+| Language Version                  | Connector Version |
+|-----------------------------------|:------------------|
+|  ballerina-0.970-alpha-1-SNAPSHOT  | 0.9.0             |
 
 
 ### Prerequisites

@@ -242,8 +242,7 @@ public type OAuth2Connector object {
     @Return {value:"Error occured during HTTP client invocation"}
     function canProcess(http:Request request) returns (boolean)|http:HttpConnectorError {
         if (self.accessToken == "") {
-            if (self.refreshToken != "" && self.clientId != ""
-            && self.clientSecret != "") {
+            if (self.refreshToken != "" && self.clientId != "" && self.clientSecret != "") {
                 var accessTokenValueResponse = self.getAccessTokenFromRefreshToken(request);
                 match accessTokenValueResponse {
                     string accessTokenString => request.setHeader("Authorization", "Bearer " + accessTokenString);

@@ -7,7 +7,7 @@ This can be used in other client connectors which use oauth2 authentication.
 
 | Language Version                  | Connector Version |
 |-----------------------------------|:------------------|
-|  ballerina-0.970-alpha-1-SNAPSHOT  | 0.9.0             |
+|  ballerina-0.970-alpha-1-SNAPSHOT  | 0.9.1             |
 
 ## Getting started
 1. Clone package-oauth2 from [https://github.com/wso2-ballerina/package-oauth2](https://github.com/wso2-ballerina/package-oauth2).

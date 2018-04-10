@@ -19,7 +19,7 @@ import ballerina/log;
 import ballerina/http;
 import ballerina/test;
 
-// OAuth API client
+// OAuth Client
 endpoint APIClient apiClient {
     accessToken:getAccessToken(),
     clientId:getClientID(),

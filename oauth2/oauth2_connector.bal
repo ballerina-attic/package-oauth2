@@ -55,7 +55,7 @@ public type OAuth2Connector object {
         http:HttpConnectorError httpConnectorError;
     }
 
-    new (accessToken, baseUrl, clientId, clientSecret, refreshToken, refreshTokenEP, refreshTokenPath, useUriParams,
+    new(accessToken, baseUrl, clientId, clientSecret, refreshToken, refreshTokenEP, refreshTokenPath, useUriParams,
     setCredentialsInHeader, httpClient, clientConfig) {
     }
 
@@ -73,7 +73,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = new ();
+                        http:Request request = new();
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
                             boolean isRefreshed => {
@@ -109,7 +109,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = new ();
+                        http:Request request = new();
                         request.setJsonPayload(originalPayload);
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
@@ -145,7 +145,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = new ();
+                        http:Request request = new();
                         request.setJsonPayload(originalPayload);
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
@@ -182,7 +182,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = new ();
+                        http:Request request = new();
                         request.setJsonPayload(originalPayload);
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
@@ -217,7 +217,7 @@ public type OAuth2Connector object {
                     http:HttpConnectorError err => return err;
                     http:Response res => {
                         response = res;
-                        http:Request request = new ();
+                        http:Request request = new();
                         match self.checkAndRefreshToken(request) {
                             http:HttpConnectorError err => return err;
                             boolean isRefreshed => {
@@ -281,15 +281,15 @@ public type OAuth2Connector object {
     function getAccessTokenFromRefreshToken(http:Request request) returns (string)|http:HttpConnectorError {
         http:HttpClient refreshTokenClient = http:createHttpClient(self.refreshTokenEP,
             self.clientConfig);
-        http:Request refreshTokenRequest = new ();
-        http:Response httpRefreshTokenResponse = new ();
+        http:Request refreshTokenRequest = new();
+        http:Response httpRefreshTokenResponse = new();
         http:HttpConnectorError connectorError = {};
         boolean useUriParams = self.useUriParams;
         boolean setCredentialsInHeader = self.setCredentialsInHeader;
         string accessTokenFromRefreshTokenReq = self.refreshTokenPath;
         string requestParams = "refresh_token=" + self.refreshToken
-        + "&grant_type=refresh_token&client_secret=" + self.clientSecret
-        + "&client_id=" + self.clientId;
+            + "&grant_type=refresh_token&client_secret=" + self.clientSecret
+            + "&client_id=" + self.clientId;
         string base64ClientIdSecret;
         if (setCredentialsInHeader) {
             string clientIdSecret = self.clientId + ":" + self.clientSecret;

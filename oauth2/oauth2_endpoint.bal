@@ -19,13 +19,13 @@ import ballerina/http;
 @Description {value:"Represents an OAuth2 client endpoint"}
 @Field {value:"conn: The OAuth2Connector of the endpoint"}
 @Field {value:"config: The OAuth2 client endpoint configurations"}
-public type Client object {
+public type APIClient object {
     public {
         OAuth2Connector conn;
         OAuth2ClientEndpointConfiguration config;
     }
 
-    new () {
+    new() {
 
     }
 
@@ -34,19 +34,17 @@ public type Client object {
     public function init(OAuth2ClientEndpointConfiguration config) {
         self.config = config;
         //Initalize OAuth2Connector with OAuth2ClientEndpoint Configurations
-        self.conn = new (config.accessToken, config.baseUrl, config.clientId, config.clientSecret, config.refreshToken,
+        self.conn = new(config.accessToken, config.baseUrl, config.clientId, config.clientSecret, config.refreshToken,
             config.refreshTokenEP, config.refreshTokenPath, config.useUriParams, config.setCredentialsInHeader,
             http:createHttpClient(config.baseUrl, config.clientConfig), config.clientConfig);
     }
 
+    @Description {value:"Register SonarQube connector endpoint."}
+    @Param {value:"typedesc: Accepts types of data (int, float, string, boolean, etc)"}
+    public function register(typedesc serviceType) {}
 
-    public function register(typedesc serviceType) {
-
-    }
-
-    public function start() {
-
-    }
+    @Description {value:"Start SonarQube connector endpoint."}
+    public function start() {}
 
     @Description {value:"Returns the connector that client code uses"}
     @Return {value:"The connector that client code uses"}
@@ -56,9 +54,7 @@ public type Client object {
 
     @Description {value:"Stops the registered service"}
     @Return {value:"Error occured during registration"}
-    public function stop() {
-
-    }
+    public function stop() {}
 };
 
 @Description {value:"OAuth2ClientEndpointConfiguration represents options to be used for OAuth2 client invocation"}

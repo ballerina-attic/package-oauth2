@@ -15,38 +15,56 @@
 // under the License.
 //
 
-import ballerina/io;
+import ballerina/log;
 import ballerina/http;
-import ballerina/util;
+import ballerina/test;
 
-public function main(string[] args) {
-    // Send a GET request to the specified endpoint
-    endpoint Client oauth2EP {
-        accessToken:args[0],
-        clientId:args[1],
-        clientSecret:args[2],
-        refreshToken:args[3],
-        refreshTokenEP:args[4],
-        refreshTokenPath:args[5],
-        baseUrl:args[6],
-        clientConfig:{},
-        useUriParams:true,
-        setCredentialsInHeader:false
-    };
+// OAuth Client
+endpoint APIClient apiClient {
+    accessToken:getAccessToken(),
+    clientId:getClientID(),
+    clientSecret:getClientSecret(),
+    refreshToken:getRefreshToken(),
+    refreshTokenEP:getRefreshTokenEndpoint(),
+    refreshTokenPath:getRefreshTokenPath(),
+    baseUrl:getBaseUrl(),
+    clientConfig:{},
+    useUriParams:getUriParamPreference(),
+    setCredentialsInHeader:getCredentialHeaderPreference()
+};
 
-    http:Request req = new ();
-    io:println("--------GET request-------");
-    var resp = oauth2EP -> get(args[7], req);
+
+@test:Config {
+    groups:["network-calls"]
+}
+function testGet() {
+    log:printInfo("oauth2EP -> get()");
+    http:Request req = new();
+    var resp = apiClient -> get(getRequestPath(), req);
     match resp {
-        http:Response res => io:println(res.getJsonPayload());
-        http:HttpConnectorError err => io:println(err);
-    }
-    io:println("--------POST request-------");
-    json jsonPayload = {};
-    req.setJsonPayload(jsonPayload);
-    var postResp = oauth2EP -> post(args[8], req);
-    match postResp {
-        http:Response res => io:println(res.getJsonPayload());
-        http:HttpConnectorError err => io:println(err);
+        http:Response res => {
+            test:assertEquals(isSuccessfulResponse(res.statusCode, res.reasonPhrase), true, msg = "Failed getProject()");
+        }
+        http:HttpConnectorError err => {
+            test:assertFail(msg = err.message);
+        }
     }
 }
+
+@test:Config {
+    groups:["network-calls"]
+}
+function testPost() {
+    log:printInfo("oauth2EP -> get()");
+    http:Request req = new();
+    var resp = apiClient -> post(getPostRequestPath(), req);
+    match resp {
+        http:Response res => {
+            test:assertEquals(isSuccessfulResponse(res.statusCode, res.reasonPhrase), true, msg = "Failed getProject()");
+        }
+        http:HttpConnectorError err => {
+            test:assertFail(msg = err.message);
+        }
+    }
+}
+

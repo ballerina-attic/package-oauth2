@@ -2,7 +2,7 @@
 
 | Language Version                  | Connector Version |
 |-----------------------------------|:------------------|
-|  ballerina-0.970-alpha-1-SNAPSHOT  | 0.9.0             |
+|  ballerina-0.970-alpha-1-SNAPSHOT  | 0.9.1             |
 
 
 ### Prerequisites
@@ -14,29 +14,19 @@ Obtain the following parameters:
   * Refresh Token
   * Refresh Token Endpoint
 
-When initializing as follows, you can either provide Access Token only or Client Id, Client Secret, Refresh Token and Refresh Token Endpoint only.
+Create a ballerina.conf inside package-oauth2 and add necessary details.When initializing as follows, you can either provide Access Token only or Client Id, Client Secret, Refresh Token and Refresh Token Endpoint only.
 
-```ballerina 
-  endpoint Client oauth2EP {
-     accessToken:"",
-     baseUrl:"",
-     clientConfig:{},
-     useUriParams:true/false,
-     setCredentialsInHeader:true/false
-  };
-```
-```ballerina 
-  endpoint Client oauth2EP {
-     clientId:"",
-     clientSecret:"",
-     refreshToken:"",
-     refreshTokenEP:"",
-     refreshTokenPath:"",
-     baseUrl:"",
-     clientConfig:{},
-     useUriParams:true/false,
-     setCredentialsInHeader:true/false
-  };
+```ballerina.conf
+     clientId = "",
+     clientSecret = "",
+     refreshToken = "",
+     refreshTokenEP = "",
+     refreshTokenPath = "",
+     baseUrl = "",
+     useUriParams = "true/false"
+     setCredentialsInHeader = "true/false"
+     getRequestPath = ""
+     postRequestPath = ""
 ```
 
 ### Run Tests

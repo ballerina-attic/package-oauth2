@@ -55,8 +55,9 @@ function testGet() {
     groups:["network-calls"]
 }
 function testPost() {
-    log:printInfo("oauth2EP -> get()");
+    log:printInfo("oauth2EP -> post()");
     http:Request req = new();
+    req.setJsonPayload(getPayload());
     var resp = apiClient -> post(getPostRequestPath(), req);
     match resp {
         http:Response res => {
@@ -68,3 +69,53 @@ function testPost() {
     }
 }
 
+@test:Config {
+    groups:["network-calls"]
+}
+function testPut() {
+    log:printInfo("oauth2EP -> put()");
+    http:Request req = new();
+    var resp = apiClient -> post(getPutRequestPath(), req);
+    match resp {
+        http:Response res => {
+            test:assertEquals(isSuccessfulResponse(res.statusCode, res.reasonPhrase), true, msg = "Failed getProject()");
+        }
+        http:HttpConnectorError err => {
+            test:assertFail(msg = err.message);
+        }
+    }
+}
+
+@test:Config {
+    groups:["network-calls"]
+}
+function testDelete() {
+    log:printInfo("oauth2EP -> delete()");
+    http:Request req = new();
+    var resp = apiClient -> post(getDeleteRequestPath(), req);
+    match resp {
+        http:Response res => {
+            test:assertEquals(isSuccessfulResponse(res.statusCode, res.reasonPhrase), true, msg = "Failed getProject()");
+        }
+        http:HttpConnectorError err => {
+            test:assertFail(msg = err.message);
+        }
+    }
+}
+
+@test:Config {
+    groups:["network-calls"]
+}
+function testPatch() {
+    log:printInfo("oauth2EP -> patch()");
+    http:Request req = new();
+    var resp = apiClient -> post(getPatchRequestPath(), req);
+    match resp {
+        http:Response res => {
+            test:assertEquals(isSuccessfulResponse(res.statusCode, res.reasonPhrase), true, msg = "Failed getProject()");
+        }
+        http:HttpConnectorError err => {
+            test:assertFail(msg = err.message);
+        }
+    }
+}

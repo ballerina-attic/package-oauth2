@@ -73,6 +73,31 @@ public function getPostRequestPath() returns string {
     return config:getAsString(POST_REQUEST_PATH) but { () => "" };
 }
 
+@Description {value:"endpoint -> post() request path.."}
+@Return {value:"returns endpoint -> post() request path.."}
+public function getPayload() returns json {
+    json jsonPayload = <json>config:getAsString(PAYLOAD) but { () => "{}" };
+    return jsonPayload;
+}
+
+@Description {value:"endpoint -> put() request path.."}
+@Return {value:"returns endpoint -> put() request path.."}
+public function getPutRequestPath() returns string {
+    return config:getAsString(PUT_REQUEST_PATH) but { () => "" };
+}
+
+@Description {value:"endpoint -> delete() request path.."}
+@Return {value:"returns endpoint -> delete() request path.."}
+public function getDeleteRequestPath() returns string {
+    return config:getAsString(DELETE_REQUEST_PATH) but { () => "" };
+}
+
+@Description {value:"endpoint -> patch() request path.."}
+@Return {value:"returns endpoint -> patch() request path.."}
+public function getPatchRequestPath() returns string {
+    return config:getAsString(PATCH_REQUEST_PATH) but { () => "" };
+}
+
 @Description {value:"Get uri parameter preference."}
 @Return {value:"returns uri parameter preference."}
 public function getUriParamPreference() returns boolean {
@@ -110,6 +135,9 @@ public function isSuccessfulResponse(int statusCode, string reasonPhrase) return
 @final string BASE_URL = "baseUrl";
 @final string GET_REQUEST_PATH = "getRequestPath";
 @final string POST_REQUEST_PATH = "postRequestPath";
+@final string PUT_REQUEST_PATH = "putRequestPath";
+@final string PATCH_REQUEST_PATH = "patchRequestPath";
+@final string DELETE_REQUEST_PATH = "deleteRequestPath";
+@final string PAYLOAD = "jsonPayload";
 @final string URI_PARAM_PREFERENCE = "uriParamsPreference";
 @final string CREDENTIAL_HEADER_PREFERENCE = "credentialHeaderPreference";
-

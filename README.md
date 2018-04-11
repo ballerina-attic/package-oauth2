@@ -34,7 +34,7 @@ When initializing, you can either provide Access Token only or Client Id, Client
 First initialize the endpoint in either way following.
 
 ```ballerina 
-  endpoint Client oauth2EP {
+  endpoint APIClient oauth2EP {
      accessToken:"",
      baseUrl:"",
      clientConfig:{},
@@ -43,7 +43,7 @@ First initialize the endpoint in either way following.
   };
 ```
 ```ballerina 
-  endpoint Client oauth2EP {
+  endpoint APIClient oauth2EP {
      clientId:"",
      clientSecret:"",
      refreshToken:"",
